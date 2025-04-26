@@ -35,6 +35,10 @@ Designed to provide a clean, modular, and scalable structure similar to Laravel.
 - **Redis Caching System** (optional)
 - **Queue Worker** for background job processing (optional)
 - **SMTP Email Service Integration** (optional)
+- **Custom Validation** with error binding
+- **Multi-Environment Support** (development, staging, production)
+- **Rate Limiter Middleware** to prevent abuse
+- **Seeder & Factory** for testing data
 
 ---
 
@@ -77,9 +81,10 @@ MAIL_PASSWORD=password
 # JWT
 JWT_SECRET=your_jwt_secret
 JWT_EXPIRE=3600
-```
 
-Only one active database is required, but you can enable multiple if needed. Redis, SMTP Mail, and Queue Worker are optional and configurable.
+# App Environment
+APP_ENV=development
+```
 
 ---
 
@@ -96,6 +101,8 @@ go-laravel-like/
 │   ├── logs/
 │   ├── queue/
 ├── config/
+├── database/
+│   ├── seeder/
 ├── docs/
 ├── migrations/
 ├── routes/
@@ -122,7 +129,7 @@ cd go-laravel-like
 go mod tidy
 ```
 
-3. Setup your `.env` file.
+3. Setup your `.env` or `.env.{environment}` file.
 
 4. Generate Swagger docs:
 
@@ -151,14 +158,21 @@ go run main.go
 
 ---
 
-## 🛠 Background Jobs & Queue
+## 🛡 Middleware
+
+- **JWT Authentication Middleware**
+- **Global Error Recovery Middleware**
+- **Rate Limiter Middleware** (per IP control)
+
+---
+
+## 🚀 Background Jobs & Queue
 
 The project supports background jobs using Go's Goroutines and Redis queue.
 
-Example usage:
-- Send welcome email in background after registration.
-- Push job to Redis Queue.
-- Process job in `Queue Worker` running as a goroutine.
+- Push background jobs
+- Process queue workers
+- Optional: Redis disable fallback
 
 ---
 
@@ -184,14 +198,28 @@ MAIL_ENABLED=true
 
 ---
 
+## 🛠 Seeder & Factory
+
+Seeder available for creating dummy data like users.
+
+Example:
+
+```bash
+Seeder.SeedUsers()
+```
+
+Generate multiple dummy users quickly for development/testing.
+
+---
+
 ## 🧑‍💻 Future Improvements
 
 - Add Role & Permission System
 - CRUD Generator
 - Queue & Jobs system with retries and delay
-- Caching with Redis for queries
 - WebSocket support for real-time features
 - Full unit and integration tests
+- Dockerization support
 
 ---
 

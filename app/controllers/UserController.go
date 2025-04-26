@@ -37,8 +37,7 @@ func (uc *UserController) Register(c *gin.Context) {
 	var input models.RegisterInput
 
 
-	if err := c.ShouldBindJSON(&input); err != nil {
-		helpers.ResponseJSON(c, 400, "Invalid input", helpers.ValidationErrors(err))
+	if !helpers.BindAndValidate(c, &input) {
 		return
 	}
 

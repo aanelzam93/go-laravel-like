@@ -27,6 +27,9 @@ import (
 		"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/files"
 	"go-laravel-like/app/queue"
+	"time" 
+	"go-laravel-like/database/seeder" 
+	
 
 )
 
@@ -38,6 +41,7 @@ func main() {
 	go queue.StartWorker()
 
 	config.ConnectDatabases()
+	seeder.SeedUsers()
 
 	if sqlDB := config.GetSQLDB(); sqlDB != nil {
 		if err := migrations.Migrate(sqlDB); err != nil {
@@ -49,6 +53,11 @@ func main() {
 	router := gin.New()
 	router.Use(gin.Recovery())
 	router.Use(middlewares.RecoveryWithLogger())
+
+	limitSeconds := config.GetEnv("RATE_LIMIT_SECONDS", "1")
+	limitDuration, _ := time.ParseDuration(limitSeconds + "s")
+
+	router.Use(middlewares.RateLimiterMiddleware(limitDuration))
 
 	routes.WebRoutes(router)
 	routes.APIRoutes(router)

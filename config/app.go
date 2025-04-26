@@ -25,6 +25,11 @@ var App AppConfig
 var JWT JWTConfig
 
 func LoadConfig() {
+	env := os.Getenv("APP_ENV")
+	if env == "" {
+		env = "development"
+	}
+	
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
