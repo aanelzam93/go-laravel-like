@@ -2,7 +2,7 @@
 # go-laravel-like
 
 A Laravel-inspired backend framework built with **Golang** using **Gin** framework.  
-Designed to provide a clean, modular, and scalable structure similar to Laravel.
+Designed to provide a clean, modular, and scalable structure for large-scale backend development.
 
 ---
 
@@ -16,96 +16,54 @@ Designed to provide a clean, modular, and scalable structure similar to Laravel.
 
 ---
 
-## 🚀 Features
+## 🚀 Major Features
 
-- Clean and modular structure inspired by Laravel
+- Clean and modular structure inspired by Laravel & DDD
 - Environment variables support via `.env` file
 - Built-in **JWT Authentication** support
-- Middleware support (public & protected routes)
-- Support **multiple database connections**:
-  - MySQL
-  - PostgreSQL
-  - MongoDB
-- Flexible database activation (`DB_DRIVERS` can choose one or more)
-- Auto migration system (currently for `users` table)
-- Background jobs using **Goroutines** (e.g., sending emails asynchronously)
-- Standard JSON API response formatting (success, error)
-- Ready for scalable production API projects
-- **Swagger API Documentation** auto-generated
-- **Redis Caching System** (optional)
-- **Queue Worker** for background job processing (optional)
-- **SMTP Email Service Integration** (optional)
-- **Custom Validation** with error binding
-- **Multi-Environment Support** (development, staging, production)
-- **Rate Limiter Middleware** to prevent abuse
-- **Seeder & Factory** for testing data
+- Middleware support (Authentication, Rate Limiter, Recovery)
+- Support **multiple database connections** (MySQL, PostgreSQL, MongoDB)
+- Auto migration system
+- Advanced background jobs with **Redis Queue Worker**
+- Response standardization (JSON Format)
+- Custom Validation Helper
+- Multi-Environment Config Support (`.env.development`, `.env.production`)
+- Graceful Shutdown Support
+- Cluster Ready (stateless, Redis centralized)
+- Swagger API Documentation
+- Seeder & Factory for Dummy Data
+- Health Check Endpoint
+- Modular System per Feature/Domain
+- Optional Redis, SMTP, Queue System Integration
 
 ---
 
-## ⚙️ Configuration in .env
-
-```env
-# Database Drivers
-DB_DRIVERS=mysql
-
-# MySQL
-DB_MYSQL_HOST=127.0.0.1
-DB_MYSQL_PORT=3306
-DB_MYSQL_DATABASE=go-laravel-like
-DB_MYSQL_USERNAME=root
-DB_MYSQL_PASSWORD=
-
-# PostgreSQL
-DB_PGSQL_HOST=127.0.0.1
-DB_PGSQL_PORT=5432
-DB_PGSQL_DATABASE=laravel_like
-DB_PGSQL_USERNAME=postgres
-DB_PGSQL_PASSWORD=
-
-# MongoDB
-DB_MONGO_URI=mongodb://localhost:27017
-DB_MONGO_DATABASE=laravel_like
-
-# Redis
-REDIS_ENABLED=false
-REDIS_HOST=localhost:6379
-
-# Mail SMTP
-MAIL_ENABLED=false
-MAIL_FROM=no-reply@example.com
-MAIL_HOST=smtp.example.com
-MAIL_PORT=587
-MAIL_USERNAME=username@example.com
-MAIL_PASSWORD=password
-
-# JWT
-JWT_SECRET=your_jwt_secret
-JWT_EXPIRE=3600
-
-# App Environment
-APP_ENV=development
-```
-
----
-
-## 📦 Folder Structure
+## 📦 Modular Folder Structure
 
 ```
 go-laravel-like/
 ├── app/
-│   ├── controllers/
+│   ├── modules/
+│   │   ├── auth/
+│   │   │   ├── controller.go
+│   │   │   ├── model.go
+│   │   │   ├── request.go
+│   │   │   ├── service.go
+│   │   ├── user/
+│   │   │   ├── controller.go
+│   │   │   ├── model.go
+│   │   │   ├── request.go
+│   │   │   ├── service.go
 │   ├── middlewares/
-│   ├── models/
 │   ├── helpers/
-│   ├── jobs/
-│   ├── logs/
 │   ├── queue/
+│   ├── jobs/
 ├── config/
 ├── database/
-│   ├── seeder/
-├── docs/
-├── migrations/
+│   ├── migrations/
+│   ├── seeders/
 ├── routes/
+├── docs/
 ├── .env
 ├── main.go
 ├── go.mod
@@ -114,7 +72,18 @@ go-laravel-like/
 
 ---
 
-## 🛠 Installation
+## 📋 API Endpoints (example)
+
+| Method | Endpoint          | Description |
+|:-------|:------------------|:------------|
+| POST   | `/api/register`    | Register new user |
+| POST   | `/api/login`       | Login user |
+| GET    | `/swagger/index.html` | Swagger Documentation |
+| GET    | `/health` | Health Check (DB, Redis) |
+
+---
+
+## 🛠 Setup & Installation
 
 1. Clone the project:
 
@@ -129,9 +98,9 @@ cd go-laravel-like
 go mod tidy
 ```
 
-3. Setup your `.env` or `.env.{environment}` file.
+3. Create `.env` or `.env.development` file.
 
-4. Generate Swagger docs:
+4. Generate Swagger Documentation:
 
 ```bash
 swag init
@@ -143,83 +112,28 @@ swag init
 go run main.go
 ```
 
-✅ The server will start on `http://localhost:8000` (or as set in `.env`).
+✅ Server will run on `http://localhost:8000` (or as per your .env setting).
 
 ---
 
-## 📋 API Endpoints
+## 🧩 How Modular Works
 
-| Method | Endpoint         | Description                |
-|:-------|:------------------|:----------------------------|
-| POST   | `/api/register`    | Register new user           |
-| POST   | `/api/login`       | Login and retrieve JWT token |
-| GET    | `/api/profile`     | Get logged-in user profile (Protected route, requires JWT token) |
-| GET    | `/swagger/index.html` | Swagger API Documentation |
+- Controller handles HTTP request.
+- Controller calls Service.
+- Service manipulates Model (DB).
+- Controller returns JSON Response.
 
----
-
-## 🛡 Middleware
-
-- **JWT Authentication Middleware**
-- **Global Error Recovery Middleware**
-- **Rate Limiter Middleware** (per IP control)
+Each module (auth, user, etc.) is isolated in its own domain.
 
 ---
 
-## 🚀 Background Jobs & Queue
+## 🛠 Future Improvements
 
-The project supports background jobs using Go's Goroutines and Redis queue.
-
-- Push background jobs
-- Process queue workers
-- Optional: Redis disable fallback
-
----
-
-## 🚀 Caching System (Redis)
-
-Redis can be optionally enabled for caching data or handling queues.
-
-Ensure to enable Redis by setting:
-```env
-REDIS_ENABLED=true
-```
-
----
-
-## 📧 Email Service (SMTP)
-
-SMTP email sending is supported for sending emails like verification or notifications.
-
-Ensure to enable Mail by setting:
-```env
-MAIL_ENABLED=true
-```
-
----
-
-## 🛠 Seeder & Factory
-
-Seeder available for creating dummy data like users.
-
-Example:
-
-```bash
-Seeder.SeedUsers()
-```
-
-Generate multiple dummy users quickly for development/testing.
-
----
-
-## 🧑‍💻 Future Improvements
-
-- Add Role & Permission System
+- Add Role & Permission system (RBAC)
 - CRUD Generator
-- Queue & Jobs system with retries and delay
-- WebSocket support for real-time features
-- Full unit and integration tests
-- Dockerization support
+- Real-time WebSocket Support
+- API Versioning (v1, v2)
+- Multi-language support (i18n)
 
 ---
 

@@ -1,11 +1,17 @@
+
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"go-laravel-like/config"
+)
 
 func WebRoutes(router *gin.Engine) {
-	router.GET("/", func(c *gin.Context) {
+	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "Welcome to Go Laravel-like Framework with Gin!",
+			"status": "ok",
+			"db": config.GetSQLDB() != nil,
+			"redis": config.RedisClient != nil,
 		})
 	})
 }
