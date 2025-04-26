@@ -1,0 +1,13 @@
+swagger:
+  generalInfo: ./main.go
+  outputDir: ./docs
+  dirs:
+    - ./app/controllers
+    - ./app/models
+    - ./
+  parseDependency: true
+  parseInternal: true
+  parseDepth: 100
+  excludes:
+    - vendor
+overrides: false

@@ -1,0 +1,18 @@
+basePath: /api
+host: localhost:8000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server for Go Laravel-like Framework.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Go Laravel-like API
+  version: "1.0"
+paths: {}
+schemes:
+- http
+swagger: "2.0"

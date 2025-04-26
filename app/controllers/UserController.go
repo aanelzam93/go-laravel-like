@@ -22,12 +22,20 @@ func NewUserController() *UserController {
 	}
 }
 
+// Register godoc
+// @Summary Register new user
+// @Description Create a new user account
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param input body models.RegisterInput true "Register user input"
+// @Success 201 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Router /api/register [post]
+
 func (uc *UserController) Register(c *gin.Context) {
-	var input struct {
-		Name     string `json:"name" binding:"required"`
-		Email    string `json:"email" binding:"required,email"`
-		Password string `json:"password" binding:"required,min=6"`
-	}
+	var input models.RegisterInput
+
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		helpers.ResponseJSON(c, 400, "Invalid input", helpers.ValidationErrors(err))
@@ -62,11 +70,20 @@ func (uc *UserController) Register(c *gin.Context) {
 	helpers.ResponseJSON(c, 201, "User registered successfully", nil)
 }
 
+
+// Login godoc
+// @Summary User login
+// @Description Login with email and password
+// @Tags auth
+// @Accept  json
+// @Produce  json
+// @Param input body LoginRequest true "Login credentials"
+// @Success 200 {object} LoginResponse
+// @Failure 401 {object} ErrorResponse
+// @Router /login [post]
+
 func (uc *UserController) Login(c *gin.Context) {
-	var input struct {
-		Email    string `json:"email" binding:"required,email"`
-		Password string `json:"password" binding:"required"`
-	}
+	var input models.LoginInput
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		helpers.ResponseJSON(c, 400, "Invalid input", helpers.ValidationErrors(err))
@@ -97,6 +114,16 @@ func (uc *UserController) Login(c *gin.Context) {
 		"token": token,
 	})
 }
+
+// Profile godoc
+// @Summary Get user profile
+// @Description Get authenticated user profile
+// @Tags User
+// @Accept json
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Router /api/profile [get]
 
 func (uc *UserController) Profile(c *gin.Context) {
 	userID, _ := c.Get("userID")

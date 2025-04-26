@@ -28,18 +28,20 @@ Designed to provide a clean, modular, and scalable structure similar to Laravel.
   - MongoDB
 - Flexible database activation (`DB_DRIVERS` can choose one or more)
 - Auto migration system (currently for `users` table)
+- Background jobs using **Goroutines** (e.g., sending emails asynchronously)
 - Standard JSON API response formatting (success, error)
 - Ready for scalable production API projects
-- Background jobs using **Goroutines** (e.g., sending emails asynchronously)
+- **Swagger API Documentation** auto-generated
+- **Redis Caching System** (optional)
+- **Queue Worker** for background job processing (optional)
+- **SMTP Email Service Integration** (optional)
 
 ---
 
-## ⚙️ Database Configuration
-
-You can enable one or multiple databases via `.env`:
+## ⚙️ Configuration in .env
 
 ```env
-# Database Drivers (choose: mysql, pgsql, mongo, or combinations like mysql+mongo)
+# Database Drivers
 DB_DRIVERS=mysql
 
 # MySQL
@@ -59,9 +61,25 @@ DB_PGSQL_PASSWORD=
 # MongoDB
 DB_MONGO_URI=mongodb://localhost:27017
 DB_MONGO_DATABASE=laravel_like
+
+# Redis
+REDIS_ENABLED=false
+REDIS_HOST=localhost:6379
+
+# Mail SMTP
+MAIL_ENABLED=false
+MAIL_FROM=no-reply@example.com
+MAIL_HOST=smtp.example.com
+MAIL_PORT=587
+MAIL_USERNAME=username@example.com
+MAIL_PASSWORD=password
+
+# JWT
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRE=3600
 ```
 
-Only one active database is required, but you can enable multiple at once if needed.
+Only one active database is required, but you can enable multiple if needed. Redis, SMTP Mail, and Queue Worker are optional and configurable.
 
 ---
 
@@ -75,13 +93,16 @@ go-laravel-like/
 │   ├── models/
 │   ├── helpers/
 │   ├── jobs/
-│   │   └── email_jobs.go
+│   ├── logs/
+│   ├── queue/
 ├── config/
+├── docs/
 ├── migrations/
 ├── routes/
 ├── .env
 ├── main.go
-└── go.mod
+├── go.mod
+├── README.md
 ```
 
 ---
@@ -103,7 +124,13 @@ go mod tidy
 
 3. Setup your `.env` file.
 
-4. Run the server:
+4. Generate Swagger docs:
+
+```bash
+swag init
+```
+
+5. Run the server:
 
 ```bash
 go run main.go
@@ -120,6 +147,40 @@ go run main.go
 | POST   | `/api/register`    | Register new user           |
 | POST   | `/api/login`       | Login and retrieve JWT token |
 | GET    | `/api/profile`     | Get logged-in user profile (Protected route, requires JWT token) |
+| GET    | `/swagger/index.html` | Swagger API Documentation |
+
+---
+
+## 🛠 Background Jobs & Queue
+
+The project supports background jobs using Go's Goroutines and Redis queue.
+
+Example usage:
+- Send welcome email in background after registration.
+- Push job to Redis Queue.
+- Process job in `Queue Worker` running as a goroutine.
+
+---
+
+## 🚀 Caching System (Redis)
+
+Redis can be optionally enabled for caching data or handling queues.
+
+Ensure to enable Redis by setting:
+```env
+REDIS_ENABLED=true
+```
+
+---
+
+## 📧 Email Service (SMTP)
+
+SMTP email sending is supported for sending emails like verification or notifications.
+
+Ensure to enable Mail by setting:
+```env
+MAIL_ENABLED=true
+```
 
 ---
 
@@ -127,9 +188,10 @@ go run main.go
 
 - Add Role & Permission System
 - CRUD Generator
-- Queue & Jobs system (like Laravel Queues)
-- Caching (Redis integration)
-- WebSocket support for real-time apps
+- Queue & Jobs system with retries and delay
+- Caching with Redis for queries
+- WebSocket support for real-time features
+- Full unit and integration tests
 
 ---
 
