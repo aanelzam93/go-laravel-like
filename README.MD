@@ -1,6 +1,7 @@
+
 # go-laravel-like
 
-A Laravel-inspired backend framework built with **Golang** using the **Gin** framework.  
+A Laravel-inspired backend framework built with **Golang** using **Gin** framework.  
 Designed to provide a clean, modular, and scalable structure similar to Laravel.
 
 ---
@@ -21,57 +22,60 @@ Designed to provide a clean, modular, and scalable structure similar to Laravel.
 - Environment variables support via `.env` file
 - Built-in **JWT Authentication** support
 - Middleware support (public & protected routes)
-- Support for **multiple database connections**:
+- Support **multiple database connections**:
   - MySQL
   - PostgreSQL
   - MongoDB
-- Flexible database activation (choose one or more with `DB_DRIVERS`)
+- Flexible database activation (`DB_DRIVERS` can choose one or more)
 - Auto migration system (currently for `users` table)
 - Standard JSON API response formatting (success, error)
 - Ready for scalable production API projects
+- Background jobs using **Goroutines** (e.g., sending emails asynchronously)
 
 ---
 
 ## ⚙️ Database Configuration
 
-Set database connections via the `.env` file:
+You can enable one or multiple databases via `.env`:
 
 ```env
-# Database Drivers (options: mysql, pgsql, mongo, or combinations like mysql+mongo)
+# Database Drivers (choose: mysql, pgsql, mongo, or combinations like mysql+mongo)
 DB_DRIVERS=mysql
 
-# MySQL Configuration
+# MySQL
 DB_MYSQL_HOST=127.0.0.1
 DB_MYSQL_PORT=3306
 DB_MYSQL_DATABASE=go-laravel-like
 DB_MYSQL_USERNAME=root
 DB_MYSQL_PASSWORD=
 
-# PostgreSQL Configuration
+# PostgreSQL
 DB_PGSQL_HOST=127.0.0.1
 DB_PGSQL_PORT=5432
 DB_PGSQL_DATABASE=laravel_like
 DB_PGSQL_USERNAME=postgres
 DB_PGSQL_PASSWORD=
 
-# MongoDB Configuration
+# MongoDB
 DB_MONGO_URI=mongodb://localhost:27017
 DB_MONGO_DATABASE=laravel_like
 ```
 
-Only one database is required to be active, but multiple can be used simultaneously if needed.
+Only one active database is required, but you can enable multiple at once if needed.
 
 ---
 
 ## 📦 Folder Structure
 
-```bash
+```
 go-laravel-like/
 ├── app/
 │   ├── controllers/
 │   ├── middlewares/
 │   ├── models/
 │   ├── helpers/
+│   ├── jobs/
+│   │   └── email_jobs.go
 ├── config/
 ├── migrations/
 ├── routes/
@@ -82,57 +86,57 @@ go-laravel-like/
 
 ---
 
-## 🛠️ Installation
+## 🛠 Installation
 
-1. **Clone the project:**
+1. Clone the project:
 
 ```bash
 git clone https://github.com/your-repo/go-laravel-like.git
 cd go-laravel-like
 ```
 
-2. **Install dependencies:**
+2. Install dependencies:
 
 ```bash
 go mod tidy
 ```
 
-3. **Configure `.env` file** according to your database setup.
+3. Setup your `.env` file.
 
-4. **Run the server:**
+4. Run the server:
 
 ```bash
 go run main.go
 ```
 
-✅ The server will start at `http://localhost:8000` (or according to your `.env`).
+✅ The server will start on `http://localhost:8000` (or as set in `.env`).
 
 ---
 
 ## 📋 API Endpoints
 
-| Method | Endpoint       | Description                          |
-| :----- | :-------------- | :----------------------------------- |
-| POST   | `/api/register` | Register a new user                  |
-| POST   | `/api/login`    | Authenticate and retrieve JWT token  |
-| GET    | `/api/profile`  | Retrieve authenticated user profile (Protected, requires JWT token) |
+| Method | Endpoint         | Description                |
+|:-------|:------------------|:----------------------------|
+| POST   | `/api/register`    | Register new user           |
+| POST   | `/api/login`       | Login and retrieve JWT token |
+| GET    | `/api/profile`     | Get logged-in user profile (Protected route, requires JWT token) |
 
 ---
 
 ## 🧑‍💻 Future Improvements
 
-- Role & Permission System
+- Add Role & Permission System
 - CRUD Generator
-- Queue & Jobs system (similar to Laravel Queues)
+- Queue & Jobs system (like Laravel Queues)
 - Caching (Redis integration)
-- WebSocket support for real-time applications
+- WebSocket support for real-time apps
 
 ---
 
 ## 📄 License
 
 This project is open-source and free to use.  
-Feel free to modify it to suit your needs.
+Feel free to modify it for your needs.
 
 ---
 

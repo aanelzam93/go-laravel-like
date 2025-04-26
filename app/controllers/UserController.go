@@ -7,6 +7,7 @@ import (
 	"go-laravel-like/config"
 	"gorm.io/gorm"               
 	"go.mongodb.org/mongo-driver/mongo"  
+	"go-laravel-like/app/jobs"
 )
 
 type UserController struct {
@@ -55,6 +56,8 @@ func (uc *UserController) Register(c *gin.Context) {
 		helpers.ResponseJSON(c, 500, "Error creating user", nil)
 		return
 	}
+
+	go jobs.SendWelcomeEmail(user.Email)
 
 	helpers.ResponseJSON(c, 201, "User registered successfully", nil)
 }
