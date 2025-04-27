@@ -35,6 +35,7 @@ Designed to provide a clean, modular, and scalable structure for large-scale bac
 - Health Check Endpoint
 - Modular System per Feature/Domain
 - Optional Redis, SMTP, Queue System Integration
+- **Dockerfile & Docker Compose Support**
 
 ---
 
@@ -45,15 +46,7 @@ go-laravel-like/
 ├── app/
 │   ├── modules/
 │   │   ├── auth/
-│   │   │   ├── controller.go
-│   │   │   ├── model.go
-│   │   │   ├── request.go
-│   │   │   ├── service.go
 │   │   ├── user/
-│   │   │   ├── controller.go
-│   │   │   ├── model.go
-│   │   │   ├── request.go
-│   │   │   ├── service.go
 │   ├── middlewares/
 │   ├── helpers/
 │   ├── queue/
@@ -64,6 +57,9 @@ go-laravel-like/
 │   ├── seeders/
 ├── routes/
 ├── docs/
+├── Dockerfile
+├── docker-compose.yml
+├── .dockerignore
 ├── .env
 ├── main.go
 ├── go.mod
@@ -84,6 +80,8 @@ go-laravel-like/
 ---
 
 ## 🛠 Setup & Installation
+
+### Local Development
 
 1. Clone the project:
 
@@ -112,7 +110,27 @@ swag init
 go run main.go
 ```
 
-✅ Server will run on `http://localhost:8000` (or as per your .env setting).
+---
+
+### Docker Development
+
+1. Ensure Docker and Docker Compose are installed.
+
+2. Run the project using:
+
+```bash
+docker-compose up --build
+```
+
+✅ The services will start:
+- App on `http://localhost:8000`
+- MySQL on `localhost:3307`
+- Redis on `localhost:6379`
+
+3. Docker Compose will handle:
+- Go app container
+- MySQL database container
+- Redis server container
 
 ---
 

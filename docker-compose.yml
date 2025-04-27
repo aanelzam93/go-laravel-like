@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - APP_ENV=development
+      - DB_DRIVERS=mysql
+      - DB_MYSQL_HOST=mysql
+      - DB_MYSQL_PORT=3306
+      - DB_MYSQL_DATABASE=go_laravel_like
+      - DB_MYSQL_USERNAME=root
+      - DB_MYSQL_PASSWORD=secret
+      - REDIS_ENABLED=true
+      - REDIS_HOST=redis:6379
+      - JWT_SECRET=your_secret_key
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_DATABASE: go_laravel_like
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - "3307:3306"
+
+  redis:
+    image: redis:7
+    restart: always
+    ports:
+      - "6379:6379"
